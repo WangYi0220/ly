@@ -1,0 +1,40 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.ly.mapper.SponsorMapper">
+    <insert id="createSponsor" parameterType="Sponsor">
+        insert into tb_sponsor(sponsorUUID, userUUID, sponsorName, sponsorOrg, sponsorAdd, beginTime, endTime, remark, poster, projectCode, judgeCode, status)
+        values (#{sponsorUUID}, #{userUUID}, #{sponsorName}, #{sponsorOrg}, #{sponsorAdd}, #{beginTime}, #{endTime}, #{remark}, #{poster}, #{projectCode}, #{judgeCode}, #{status})
+    </insert>
+
+    <select id="getSponsorBySponsorUUID" parameterType="String" resultType="Sponsor">
+        select sponsorUUID, userUUID, sponsorName, sponsorOrg, sponsorAdd, beginTime, endTime, remark, poster, projectCode, judgeCode, flag, status from tb_sponsor
+        where sponsorUUID = #{sponsorUUID}
+    </select>
+
+    <update id="updateSponsor" parameterType="Sponsor">
+        update tb_sponsor
+        set sponsorName = #{sponsorName}, sponsorOrg = #{sponsorOrg}, sponsorAdd = #{sponsorAdd}, beginTime = #{beginTime}, endTime = #{endTime}, remark = #{remark}, poster = #{poster}
+        where sponsorUUID = #{sponsorUUID}
+    </update>
+
+    <select id="getSponsorListByUserUUID" parameterType="String" resultType="Map">
+        select sponsorUUID, userUUID, sponsorName, sponsorOrg, sponsorAdd, beginTime, endTime, poster, flag, status
+        from tb_sponsor
+        where userUUID = #{userUUID}
+    </select>
+
+    <update id="CheckStatus" statementType="CALLABLE">
+        call pro_sponsor_checkStatus()
+    </update>
+
+    <select id="getProjectCode" parameterType="String" resultType="Map">
+        select sponsorUUID, projectCode
+        from tb_sponsor
+        where sponsorUUID = #{sponsorUUID}
+    </select>
+
+    <select id="getJudgeCode" parameterType="String" resultType="Map">
+        select sponsorUUID, judgeCode
+        from tb_sponsor
+        where sponsorUUID = #{sponsorUUID}
+    </select>
+</mapper>

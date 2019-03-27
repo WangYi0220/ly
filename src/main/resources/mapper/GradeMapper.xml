@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.ly.mapper.GradeMapper">
+    <insert id="addGrade" parameterType="Grade">
+        insert into tb_grade(gradeUUID, sponsorUUID, gradeName, grade)
+        values (#{gradeUUID}, #{sponsorUUID}, #{gradeName}, #{grade})
+    </insert>
+
+    <delete id="delGrade" parameterType="String">
+        delete from tb_grade
+        where gradeUUID = #{gradeUUID}
+    </delete>
+
+    <update id="updateGrade" parameterType="Grade">
+        update tb_grade
+        set gradeName = #{gradeName}, grade = #{grade}
+        where gradeUUID = #{gradeUUID}
+    </update>
+
+    <select id="getGradeListBySponsorUUID" parameterType="String" resultType="Grade">
+        select gradeUUID, gradeName, grade
+        from tb_grade
+        where sponsorUUID = #{sponsorUUID}
+    </select>
+</mapper>

@@ -1,0 +1,40 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.ly.mapper.JudgeMapper">
+    <insert id="addJudge" parameterType="Judge">
+        insert into tb_judge (judgeUUID, sponsorUUID, userUUID, judgeName, phone, organ)
+        values (#{judgeUUID}, #{sponsorUUID}, #{userUUID}, #{judgeName}, #{phone}, #{organ})
+    </insert>
+
+    <select id="getJudgeListByUserUUID" parameterType="String" resultType="Map">
+        select
+          sponsor.sponsorUUID sponsorUUID,
+          judge.userUUID userUUID,
+          sponsor.sponsorName sponsorName,
+          sponsor.sponsorOrg sponsorOrg,
+          sponsor.sponsorAdd sponsorAdd,
+          sponsor.beginTime beginTime,
+          sponsor.endTime endTime,
+          sponsor.poster poster,
+          judge.flag flag,
+          sponsor.status status
+        from tb_sponsor sponsor
+        inner join (select sponsorUUID, userUUID, flag from tb_judge where userUUID = #{userUUID}) judge
+        on sponsor.sponsorUUID = judge.sponsorUUID
+    </select>
+
+    <select id="getJudgeListBySponsorUUID" parameterType="String" resultType="Map">
+        select judgeUUID, sponsorUUID, userUUID, judgeName, phone, organ
+        from tb_judge
+        where sponsorUUID = #{sponsorUUID}
+    </select>
+
+    <update id="updateJudgeByJudgeUUID" parameterType="Judge">
+        update tb_judge
+        set phone = #{phone}, judgeName = #{judgeName}, organ = #{organ}
+        where judgeUUID = #{judgeUUID}
+    </update>
+
+    <delete id="delJudgeByJudgeUUID" parameterType="String">
+
+    </delete>
+</mapper>

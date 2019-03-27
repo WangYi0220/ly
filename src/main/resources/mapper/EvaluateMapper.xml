@@ -1,0 +1,37 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sl.ly.mapper.EvaluateMapper">
+    <insert id="addEvaluate" parameterType="List">
+        insert into tb_evaluate (evaluateUUID, sponsorUUID, gradeUUID, projectUUID, score, remark, flag, status)
+        values
+        <foreach collection="evaluates" open="" separator="," close="" item="evaluate">
+            (REPLACE(UUID(), '-', ''), #{evaluate.sponsorUUID}, #{evaluate.gradeUUID}, #{evaluate.projectUUID},
+            #{evaluate.score}, #{evaluate.remark}, #{evaluate.flag}, #{evaluate.status})
+        </foreach>
+    </insert>
+
+    <select id="getProjectEvaluateListBySponsorUUID" resultType="Map">
+        select
+        project.projectUUID,
+        evaluate.status,
+        evaluate.score,
+        project.projectName
+        from (select projectUUID, score, status from tb_evaluate where sponsorUUID = #{sponsorUUID} and flag = 1) evaluate
+        inner join tb_project project
+        on evaluate.projectUUID = project.projectUUID
+        where project.sponsorUUID = #{sponsorUUID}
+    </select>
+
+    <select id="getCollectList" parameterType="String" resultType="Map">
+        select
+        project.projectName,
+        project.projectUUID,
+        AVG(evaluate.score) total
+        from (select projectName, projectUUID from tb_project where sponsorUUID = #{sponsorUUID}) project
+        inner join tb_evaluate evaluate
+        on project.projectUUID = evaluate.projectUUID
+        where evaluate.sponsorUUID = #{sponsorUUID}
+        and evaluate.status = 1
+        and flag = 1
+        order by total desc
+    </select>
+</mapper>
